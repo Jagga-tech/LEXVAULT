@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LexVault — Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body class="login-page">
+
+    <div class="login">
+        <!-- Left Panel — Branding -->
+        <div class="login__brand">
+            <div class="login__brand-content">
+                <a href="index.html" class="login__logo">
+                    <span class="logo-icon">&#128218;</span> LexVault
+                </a>
+                <h1 class="login__tagline">Welcome Back</h1>
+                <p class="login__desc">
+                    Manage your library smarter. Track books, members, and transactions — all in one place.
+                </p>
+                <div class="login__features">
+                    <div class="login__feature">
+                        <span class="login__feature-icon">&#128214;</span>
+                        <span>Organize book collections</span>
+                    </div>
+                    <div class="login__feature">
+                        <span class="login__feature-icon">&#128101;</span>
+                        <span>Manage members easily</span>
+                    </div>
+                    <div class="login__feature">
+                        <span class="login__feature-icon">&#128202;</span>
+                        <span>Track everything with dashboard</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel — Login Form -->
+        <div class="login__form-section">
+            <div class="login__form-wrapper">
+                <h2 class="login__form-title">Sign In</h2>
+                <p class="login__form-subtitle">Enter your credentials to access the dashboard</p>
+
+                <!-- Role Tabs -->
+                <div class="login__roles">
+                    <button class="login__role login__role--active" data-role="admin">Admin</button>
+                    <button class="login__role" data-role="librarian">Librarian</button>
+                    <button class="login__role" data-role="member">Member</button>
+                </div>
+
+                <form class="login__form" id="loginForm">
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username</label>
+                        <div class="form-input-wrapper">
+                            <span class="form-input-icon">&#128100;</span>
+                            <input
+                                type="text"
+                                id="username"
+                                class="form__input form__input--icon"
+                                placeholder="Enter your username"
+                                required
+                                autocomplete="username"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="form-input-wrapper">
+                            <span class="form-input-icon">&#128274;</span>
+                            <input
+                                type="password"
+                                id="password"
+                                class="form__input form__input--icon"
+                                placeholder="Enter your password"
+                                required
+                                autocomplete="current-password"
+                            >
+                            <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
+                                &#128065;
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-checkbox">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                        <a href="#" class="form-link">Forgot password?</a>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div class="login__error" id="loginError">
+                        <span>&#9888;</span> Invalid username or password
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn--full">Sign In</button>
+                </form>
+
+                <!-- Demo Credentials -->
+                <div class="login__demo">
+                    <p class="login__demo-title">Quick Demo Access</p>
+                    <div class="login__demo-buttons">
+                        <button class="login__demo-btn" data-user="admin" data-pass="admin123">
+                            <span>&#128119;</span> Admin
+                        </button>
+                        <button class="login__demo-btn" data-user="librarian" data-pass="lib123">
+                            <span>&#128218;</span> Librarian
+                        </button>
+                        <button class="login__demo-btn" data-user="member" data-pass="mem123">
+                            <span>&#128100;</span> Member
+                        </button>
+                    </div>
+                </div>
+
+                <p class="login__footer-text">
+                    <a href="index.html">&larr; Back to Home</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Role Tab Switching ---
+        const roleBtns = document.querySelectorAll('.login__role');
+        roleBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                roleBtns.forEach(b => b.classList.remove('login__role--active'));
+                btn.classList.add('login__role--active');
+            });
+        });
+
+        // --- Password Toggle ---
+        const toggleBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        toggleBtn.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            toggleBtn.innerHTML = isPassword ? '&#128064;' : '&#128065;';
+        });
+
+        // --- Demo Buttons ---
+        const demoBtns = document.querySelectorAll('.login__demo-btn');
+        demoBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.getElementById('username').value = btn.dataset.user;
+                document.getElementById('password').value = btn.dataset.pass;
+                // Auto-select matching role tab
+                const role = btn.dataset.user === 'librarian' ? 'librarian' :
+                             btn.dataset.user === 'member' ? 'member' : 'admin';
+                roleBtns.forEach(b => b.classList.remove('login__role--active'));
+                document.querySelector(`[data-role="${role}"]`).classList.add('login__role--active');
+            });
+        });
+
+        // --- Login Form Submit ---
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+
+        const validUsers = {
+            admin:     { password: 'admin123', role: 'admin' },
+            librarian: { password: 'lib123',   role: 'librarian' },
+            member:    { password: 'mem123',   role: 'member' }
+        };
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            const user = validUsers[username];
+
+            if (user && user.password === password) {
+                // Save session
+                localStorage.setItem('lv_auth', JSON.stringify({
+                    username: username,
+                    role: user.role,
+                    loggedInAt: new Date().toISOString()
+                }));
+                // Redirect to dashboard
+                window.location.href = 'dashboard.html';
+            } else {
+                loginError.classList.add('login__error--show');
+                setTimeout(() => {
+                    loginError.classList.remove('login__error--show');
+                }, 3000);
+            }
+        });
+    </script>
+
+</body>
+</html>
