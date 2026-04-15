@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LexVault — Members</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="js/common.js"></script>
+</head>
+<body class="dash-body">
+
+    <nav class="navbar">
+        <div class="container navbar__inner">
+            <a href="dashboard.html" class="navbar__logo">
+                <span class="logo-icon">&#128218;</span> LexVault
+            </a>
+            <ul class="navbar__links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="books.html">Books</a></li>
+                <li><a href="members.html" class="nav-active">Members</a></li>
+                <li><span id="navUser" class="nav-user">—</span></li>
+                <li><button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">&#127769;</button></li>
+                <li><button id="logoutBtn" class="btn btn--primary">Logout</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="dash">
+        <div class="container">
+
+            <header class="dash__header">
+                <h1 class="dash__title">Members</h1>
+                <p class="dash__sub">Registered library members.</p>
+            </header>
+
+            <div class="page-head">
+                <input type="text" id="searchBox" class="search-box" placeholder="Search by name, username, or email...">
+                <div class="page-head__actions">
+                    <button id="exportBtn" class="btn btn--ghost">&#128229; Export CSV</button>
+                    <button id="addBtn"    class="btn btn--primary">&#10133; Add Member</button>
+                </div>
+            </div>
+
+            <div id="countLine" class="dash__sub" style="margin-bottom:10px;"></div>
+
+            <div style="overflow-x:auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Joined</th>
+                            <th>Books Borrowed</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="js/members.js"></script>
+</body>
+</html>
