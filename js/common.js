@@ -44,11 +44,11 @@ function seedDemoData() {
     if (!localStorage.getItem('lv_books')) {
         saveBooks([
             { id: 1, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', isbn: '9780743273565', issuedTo: null },
-            { id: 2, title: 'Clean Code', author: 'Robert C. Martin', isbn: '9780132350884', issuedTo: 'amit' },
+            { id: 2, title: 'Clean Code', author: 'Robert C. Martin', isbn: '9780132350884', issuedTo: 'emma' },
             { id: 3, title: 'Introduction to Algorithms', author: 'Cormen et al.', isbn: '9780262033848', issuedTo: 'member' },
-            { id: 4, title: 'The Pragmatic Programmer', author: 'Hunt & Thomas', isbn: '9780201616224', issuedTo: 'priya' },
+            { id: 4, title: 'The Pragmatic Programmer', author: 'Hunt & Thomas', isbn: '9780201616224', issuedTo: 'kenji' },
             { id: 5, title: '1984', author: 'George Orwell', isbn: '9780451524935', issuedTo: null },
-            { id: 6, title: 'Sapiens', author: 'Yuval Noah Harari', isbn: '9780062316097', issuedTo: 'ravi' },
+            { id: 6, title: 'Sapiens', author: 'Yuval Noah Harari', isbn: '9780062316097', issuedTo: 'amara' },
             { id: 7, title: 'Atomic Habits', author: 'James Clear', isbn: '9780735211292', issuedTo: 'member' },
             { id: 8, title: 'Design Patterns', author: 'GoF', isbn: '9780201633610', issuedTo: null }
         ]);
@@ -56,24 +56,24 @@ function seedDemoData() {
 
     if (!localStorage.getItem('lv_members')) {
         saveMembers([
-            { id: 1, username: 'amit',   name: 'Amit Sharma',  email: 'amit@example.com',  joined: '2026-01-15' },
-            { id: 2, username: 'priya',  name: 'Priya Patel',  email: 'priya@example.com', joined: '2026-02-03' },
-            { id: 3, username: 'ravi',   name: 'Ravi Kumar',   email: 'ravi@example.com',  joined: '2026-02-18' },
-            { id: 4, username: 'neha',   name: 'Neha Singh',   email: 'neha@example.com',  joined: '2026-03-01' },
-            { id: 5, username: 'rahul',  name: 'Rahul Gupta',  email: 'rahul@example.com', joined: '2026-03-12' },
-            { id: 6, username: 'member', name: 'Demo Member',  email: 'demo@example.com',  joined: '2026-03-20' }
+            { id: 1, username: 'emma',   name: 'Emma Johnson',   email: 'emma@example.com',   joined: '2026-01-15' },
+            { id: 2, username: 'kenji',  name: 'Kenji Tanaka',   email: 'kenji@example.com',  joined: '2026-02-03' },
+            { id: 3, username: 'amara',  name: 'Amara Okafor',   email: 'amara@example.com',  joined: '2026-02-18' },
+            { id: 4, username: 'diego',  name: 'Diego Martinez', email: 'diego@example.com',  joined: '2026-03-01' },
+            { id: 5, username: 'sophia', name: 'Sophia Chen',    email: 'sophia@example.com', joined: '2026-03-12' },
+            { id: 6, username: 'member', name: 'Demo Member',    email: 'demo@example.com',   joined: '2026-03-20' }
         ]);
     }
 
     if (!localStorage.getItem('lv_activity')) {
         saveActivity([
             { date: '2026-04-13', bookTitle: 'Introduction to Algorithms', member: 'member', action: 'Issued',   status: 'Active',   dueDate: '2026-04-27' },
-            { date: '2026-04-12', bookTitle: 'Clean Code',                 member: 'amit',   action: 'Issued',   status: 'Active',   dueDate: '2026-04-26' },
-            { date: '2026-04-11', bookTitle: 'The Pragmatic Programmer',   member: 'priya',  action: 'Issued',   status: 'Overdue',  dueDate: '2026-04-13' },
-            { date: '2026-04-10', bookTitle: 'Sapiens',                    member: 'ravi',   action: 'Issued',   status: 'Active',   dueDate: '2026-04-24' },
+            { date: '2026-04-12', bookTitle: 'Clean Code',                 member: 'emma',   action: 'Issued',   status: 'Active',   dueDate: '2026-04-26' },
+            { date: '2026-04-11', bookTitle: 'The Pragmatic Programmer',   member: 'kenji',  action: 'Issued',   status: 'Overdue',  dueDate: '2026-04-13' },
+            { date: '2026-04-10', bookTitle: 'Sapiens',                    member: 'amara',  action: 'Issued',   status: 'Active',   dueDate: '2026-04-24' },
             { date: '2026-04-09', bookTitle: 'Atomic Habits',              member: 'member', action: 'Issued',   status: 'Overdue',  dueDate: '2026-04-12' },
-            { date: '2026-04-08', bookTitle: '1984',                       member: 'neha',   action: 'Returned', status: 'Complete', dueDate: '2026-04-15' },
-            { date: '2026-04-05', bookTitle: 'Atomic Habits',              member: 'rahul',  action: 'Returned', status: 'Complete', dueDate: '2026-04-12' },
+            { date: '2026-04-08', bookTitle: '1984',                       member: 'diego',  action: 'Returned', status: 'Complete', dueDate: '2026-04-15' },
+            { date: '2026-04-05', bookTitle: 'Atomic Habits',              member: 'sophia', action: 'Returned', status: 'Complete', dueDate: '2026-04-12' },
             { date: '2026-04-02', bookTitle: 'The Great Gatsby',           member: 'member', action: 'Returned', status: 'Complete', dueDate: '2026-04-10' }
         ]);
     }
