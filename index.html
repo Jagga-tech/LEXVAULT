@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LexVault — Smart Library Management</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/app.css">
+    <script src="js/common.js"></script>
 </head>
 <body>
 
@@ -18,6 +20,7 @@
                 <li><a href="#features">Features</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <li><button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">&#127769;</button></li>
                 <li><a href="login.html" class="btn btn--primary">Login</a></li>
             </ul>
             <button class="navbar__toggle" aria-label="Toggle menu">&#9776;</button>
@@ -208,11 +211,15 @@
         </div>
     </footer>
 
-    <!-- Mobile Menu Toggle Script (minimal) -->
+    <script src="js/main.js"></script>
     <script>
-        document.querySelector('.navbar__toggle').addEventListener('click', function() {
-            document.querySelector('.navbar__links').classList.toggle('navbar__links--open');
-        });
+        // Theme toggle
+        const _tbtn = document.getElementById('themeToggle');
+        if (_tbtn) {
+            const cur = localStorage.getItem('lv_theme') || 'light';
+            _tbtn.innerHTML = cur === 'dark' ? '&#9728;' : '&#127769;';
+            _tbtn.addEventListener('click', toggleTheme);
+        }
     </script>
 
 </body>

@@ -1,0 +1,337 @@
+/* Shared app styles — modal, toast, theme, form errors */
+
+
+/* --- Dark mode --- */
+html[data-theme="dark"] {
+    --white:     #1a1d24;
+    --light:     #22262e;
+    --gray-100:  #2a2e38;
+    --gray-200:  #343a46;
+    --gray-300:  #3f4756;
+    --gray-500:  #8a93a4;
+    --gray-600:  #a7b0c0;
+    --gray-700:  #c2cad8;
+    --gray-800:  #dce2ed;
+    --gray-900:  #ecf0f6;
+    --primary:       #3d7bb8;
+    --primary-light: #5a97d4;
+    --primary-dark:  #0f1f33;
+    --shadow:    0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme="dark"] body {
+    background: var(--light);
+    color: var(--gray-800);
+}
+
+html[data-theme="dark"] .dash-body {
+    background: var(--gray-100);
+}
+
+
+/* --- Theme toggle button --- */
+.theme-toggle {
+    background: transparent;
+    border: 1px solid var(--gray-500);
+    color: var(--white);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent);
+}
+
+
+/* --- Toast notifications --- */
+.toast-wrap {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.toast {
+    background: var(--gray-900);
+    color: var(--white);
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    font-size: 0.95rem;
+    min-width: 200px;
+    max-width: 360px;
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: auto;
+}
+
+.toast--success { background: var(--success); color: #fff; }
+.toast--error   { background: var(--danger);  color: #fff; }
+.toast--info    { background: var(--primary); color: #fff; }
+
+.toast--leaving {
+    opacity: 0;
+    transform: translateX(30px);
+}
+
+
+/* --- Modal --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1500;
+    padding: 20px;
+    animation: fadeIn 0.2s ease;
+}
+
+.modal {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow: auto;
+    animation: slideUp 0.25s ease;
+}
+
+.modal__header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal__title {
+    font-size: 1.2rem;
+    color: var(--primary-dark);
+    margin: 0;
+}
+
+html[data-theme="dark"] .modal__title { color: var(--gray-900); }
+
+.modal__close {
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--gray-600);
+}
+
+.modal__close:hover { color: var(--danger); }
+
+.modal__body {
+    padding: 24px;
+}
+
+.modal__footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--gray-200);
+}
+
+.modal__table-wrap {
+    max-height: 50vh;
+    overflow: auto;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+}
+
+@keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+
+/* --- Form group / errors --- */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+.input--error {
+    border-color: var(--danger) !important;
+}
+
+.field-error {
+    display: block;
+    color: var(--danger);
+    font-size: 0.82rem;
+    margin-top: 4px;
+}
+
+
+/* --- Ghost button (for modal cancel) --- */
+.btn--ghost {
+    background: var(--gray-100);
+    color: var(--gray-800);
+    border-color: var(--gray-300);
+}
+
+.btn--ghost:hover {
+    background: var(--gray-200);
+}
+
+
+/* --- Search box --- */
+.search-box {
+    width: 100%;
+    max-width: 320px;
+    padding: 10px 14px;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    font-family: inherit;
+    margin-bottom: 16px;
+    background: var(--white);
+    color: var(--gray-900);
+    outline: none;
+}
+
+.search-box:focus {
+    border-color: var(--primary);
+}
+
+
+/* --- Page header with search --- */
+.page-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.page-head__actions {
+    display: flex;
+    gap: 10px;
+}
+
+
+/* --- Prevent scroll when modal open --- */
+.no-scroll { overflow: hidden; }
+
+
+/* --- CRUD table --- */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.data-table thead {
+    background: var(--primary-dark);
+    color: var(--white);
+}
+
+.data-table th,
+.data-table td {
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 0.95rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.data-table th {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.data-table tbody tr:hover {
+    background: var(--gray-100);
+}
+
+.data-table tbody tr:last-child td { border-bottom: none; }
+
+.row-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-icon {
+    background: transparent;
+    border: 1px solid var(--gray-300);
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    color: var(--gray-700);
+    font-family: inherit;
+    transition: all var(--transition);
+}
+
+.btn-icon:hover {
+    background: var(--gray-100);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn-icon--danger {
+    color: var(--danger);
+    border-color: #f5c6cb;
+}
+
+.btn-icon--danger:hover {
+    background: #fdecea;
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+
+/* --- Dark mode adjustments for shared comps --- */
+html[data-theme="dark"] .btn--ghost           { background: var(--gray-200); color: var(--gray-800); border-color: var(--gray-300); }
+html[data-theme="dark"] .qa-btn,
+html[data-theme="dark"] .stat-card,
+html[data-theme="dark"] .activity__wrap,
+html[data-theme="dark"] .modal,
+html[data-theme="dark"] .data-table,
+html[data-theme="dark"] .search-box,
+html[data-theme="dark"] .form__input         { background: var(--white); color: var(--gray-900); }
+html[data-theme="dark"] .qa-btn              { border-color: var(--gray-300); }
+html[data-theme="dark"] .activity__table th,
+html[data-theme="dark"] .data-table th       { background: var(--primary-dark); color: #fff; }
+html[data-theme="dark"] .activity__table tbody tr:hover,
+html[data-theme="dark"] .data-table tbody tr:hover { background: var(--gray-100); }
+html[data-theme="dark"] .dash__title,
+html[data-theme="dark"] .dash__h2,
+html[data-theme="dark"] .section__title      { color: var(--gray-900); }
+
+
+/* --- Responsive tweaks --- */
+@media (max-width: 768px) {
+    .page-head { flex-direction: column; align-items: stretch; }
+    .page-head__actions { flex-wrap: wrap; }
+    .modal { max-width: 100%; }
+}

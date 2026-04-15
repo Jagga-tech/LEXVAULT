@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LexVault — Dashboard</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <script src="js/common.js"></script>
 </head>
 <body class="dash-body">
 
@@ -16,7 +18,10 @@
                 <span class="logo-icon">&#128218;</span> LexVault
             </a>
             <ul class="navbar__links">
+                <li><a href="books.html">Books</a></li>
+                <li><a href="members.html" id="navMembers">Members</a></li>
                 <li><span id="navUser" class="nav-user">—</span></li>
+                <li><button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">&#127769;</button></li>
                 <li><button id="logoutBtn" class="btn btn--primary">Logout</button></li>
             </ul>
         </div>
@@ -47,7 +52,10 @@
 
             <!-- Recent activity -->
             <section class="activity">
-                <h2 class="dash__h2">Recent Activity</h2>
+                <div class="page-head">
+                    <h2 class="dash__h2" style="margin-bottom:0;">Recent Activity</h2>
+                    <input type="text" id="searchActivity" class="search-box" placeholder="Search activity...">
+                </div>
                 <div class="activity__wrap">
                     <table class="activity__table">
                         <thead>
@@ -56,6 +64,7 @@
                                 <th>Book</th>
                                 <th>Member</th>
                                 <th>Action</th>
+                                <th>Due Date</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -69,306 +78,7 @@
         </div>
     </main>
 
-    <script>
-    // --- Auth check ---
-    const raw = localStorage.getItem('lv_auth');
-    if (!raw) {
-        window.location.href = 'login.html';
-    }
-    const auth = JSON.parse(raw || '{}');
-
-    // --- Seed demo data on first visit ---
-    // (so the dashboard shows real numbers instead of empty zeros)
-    function seedData() {
-        if (!localStorage.getItem('lv_books')) {
-            const books = [
-                { id: 1, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', isbn: '9780743273565', issuedTo: null },
-                { id: 2, title: 'Clean Code', author: 'Robert C. Martin', isbn: '9780132350884', issuedTo: 'amit' },
-                { id: 3, title: 'Introduction to Algorithms', author: 'Cormen et al.', isbn: '9780262033848', issuedTo: 'member' },
-                { id: 4, title: 'The Pragmatic Programmer', author: 'Hunt & Thomas', isbn: '9780201616224', issuedTo: 'priya' },
-                { id: 5, title: '1984', author: 'George Orwell', isbn: '9780451524935', issuedTo: null },
-                { id: 6, title: 'Sapiens', author: 'Yuval Noah Harari', isbn: '9780062316097', issuedTo: 'ravi' },
-                { id: 7, title: 'Atomic Habits', author: 'James Clear', isbn: '9780735211292', issuedTo: 'member' },
-                { id: 8, title: 'Design Patterns', author: 'GoF', isbn: '9780201633610', issuedTo: null }
-            ];
-            localStorage.setItem('lv_books', JSON.stringify(books));
-        }
-
-        if (!localStorage.getItem('lv_members')) {
-            const members = [
-                { id: 1, username: 'amit',  name: 'Amit Sharma',  joined: '2026-01-15' },
-                { id: 2, username: 'priya', name: 'Priya Patel',  joined: '2026-02-03' },
-                { id: 3, username: 'ravi',  name: 'Ravi Kumar',   joined: '2026-02-18' },
-                { id: 4, username: 'neha',  name: 'Neha Singh',   joined: '2026-03-01' },
-                { id: 5, username: 'rahul', name: 'Rahul Gupta',  joined: '2026-03-12' },
-                { id: 6, username: 'member',name: 'Demo Member',   joined: '2026-03-20' }
-            ];
-            localStorage.setItem('lv_members', JSON.stringify(members));
-        }
-
-        if (!localStorage.getItem('lv_activity')) {
-            // Recent transactions (newest first)
-            const activity = [
-                { date: '2026-04-12', bookTitle: 'Clean Code',              member: 'amit',  action: 'Issued',   status: 'Active'   },
-                { date: '2026-04-11', bookTitle: 'The Pragmatic Programmer',member: 'priya', action: 'Issued',   status: 'Overdue'  },
-                { date: '2026-04-10', bookTitle: 'Sapiens',                 member: 'ravi',  action: 'Issued',   status: 'Active'   },
-                { date: '2026-04-08', bookTitle: '1984',                    member: 'neha',  action: 'Returned', status: 'Complete' },
-                { date: '2026-04-05', bookTitle: 'Atomic Habits',           member: 'rahul', action: 'Returned', status: 'Complete' },
-                { date: '2026-04-13', bookTitle: 'Introduction to Algorithms', member: 'member', action: 'Issued',   status: 'Active'   },
-                { date: '2026-04-09', bookTitle: 'Atomic Habits',           member: 'member', action: 'Issued',   status: 'Overdue'  },
-                { date: '2026-04-02', bookTitle: 'The Great Gatsby',        member: 'member', action: 'Returned', status: 'Complete' }
-            ];
-            localStorage.setItem('lv_activity', JSON.stringify(activity));
-        }
-    }
-    seedData();
-
-    // --- Load data ---
-    const books    = JSON.parse(localStorage.getItem('lv_books'));
-    const members  = JSON.parse(localStorage.getItem('lv_members'));
-    const activity = JSON.parse(localStorage.getItem('lv_activity'));
-
-    // --- Greeting ---
-    document.getElementById('greetName').textContent = auth.username || 'User';
-    document.getElementById('greetRole').textContent = auth.role || 'member';
-    document.getElementById('navUser').textContent = '@' + (auth.username || 'user');
-
-    // --- Build stats ---
-    const totalBooks   = books.length;
-    const totalMembers = members.length;
-    const issuedBooks  = books.filter(b => b.issuedTo !== null).length;
-    const overdue      = activity.filter(a => a.status === 'Overdue').length;
-
-    let statsHTML = '';
-
-    if (auth.role === 'admin' || auth.role === 'librarian') {
-        statsHTML = `
-            <div class="stat-card stat-card--blue">
-                <div class="stat-card__icon">&#128214;</div>
-                <div class="stat-card__num">${totalBooks}</div>
-                <div class="stat-card__label">Total Books</div>
-            </div>
-            <div class="stat-card stat-card--green">
-                <div class="stat-card__icon">&#128101;</div>
-                <div class="stat-card__num">${totalMembers}</div>
-                <div class="stat-card__label">Total Members</div>
-            </div>
-            <div class="stat-card stat-card--gold">
-                <div class="stat-card__icon">&#128260;</div>
-                <div class="stat-card__num">${issuedBooks}</div>
-                <div class="stat-card__label">Books Issued</div>
-            </div>
-            <div class="stat-card stat-card--red">
-                <div class="stat-card__icon">&#9888;</div>
-                <div class="stat-card__num">${overdue}</div>
-                <div class="stat-card__label">Overdue</div>
-            </div>
-        `;
-    } else {
-        // Member view — only their stuff
-        const myBooks   = books.filter(b => b.issuedTo === auth.username);
-        const myHistory = activity.filter(a => a.member === auth.username);
-        const myOverdue = activity.filter(a => a.member === auth.username && a.status === 'Overdue').length;
-        const myReturned= activity.filter(a => a.member === auth.username && a.action === 'Returned').length;
-
-        statsHTML = `
-            <div class="stat-card stat-card--blue">
-                <div class="stat-card__icon">&#128214;</div>
-                <div class="stat-card__num">${myBooks.length}</div>
-                <div class="stat-card__label">Currently Borrowed</div>
-            </div>
-            <div class="stat-card stat-card--gold">
-                <div class="stat-card__icon">&#128337;</div>
-                <div class="stat-card__num">${myOverdue}</div>
-                <div class="stat-card__label">Overdue</div>
-            </div>
-            <div class="stat-card stat-card--green">
-                <div class="stat-card__icon">&#9989;</div>
-                <div class="stat-card__num">${myReturned}</div>
-                <div class="stat-card__label">Returned</div>
-            </div>
-            <div class="stat-card stat-card--red">
-                <div class="stat-card__icon">&#128176;</div>
-                <div class="stat-card__num">${myOverdue * 5}</div>
-                <div class="stat-card__label">Fine (₹)</div>
-            </div>
-        `;
-    }
-    document.getElementById('statsGrid').innerHTML = statsHTML;
-
-    // --- Build quick actions ---
-    let qaHTML = '';
-    if (auth.role === 'admin' || auth.role === 'librarian') {
-        qaHTML = `
-            <button class="qa-btn" id="issueBtn">
-                <span class="qa-btn__icon">&#128260;</span>
-                <span>Issue Book</span>
-            </button>
-            <button class="qa-btn" id="addBookBtn">
-                <span class="qa-btn__icon">&#128214;</span>
-                <span>Add Book</span>
-            </button>
-            <button class="qa-btn" id="addMemberBtn">
-                <span class="qa-btn__icon">&#128101;</span>
-                <span>Add Member</span>
-            </button>
-        `;
-        if (auth.role === 'admin') {
-            qaHTML += `
-                <button class="qa-btn qa-btn--admin" id="clearBtn">
-                    <span class="qa-btn__icon">&#128465;</span>
-                    <span>Reset Demo Data</span>
-                </button>
-            `;
-        }
-    } else {
-        qaHTML = `
-            <button class="qa-btn" id="browseBtn">
-                <span class="qa-btn__icon">&#128269;</span>
-                <span>Browse Books</span>
-            </button>
-            <button class="qa-btn" id="historyBtn">
-                <span class="qa-btn__icon">&#128221;</span>
-                <span>My History</span>
-            </button>
-        `;
-    }
-    document.getElementById('qaGrid').innerHTML = qaHTML;
-
-    // --- Build activity table ---
-    let rows = activity;
-    if (auth.role === 'member') {
-        rows = activity.filter(a => a.member === auth.username);
-    }
-
-    const body = document.getElementById('activityBody');
-    if (rows.length === 0) {
-        body.innerHTML = '<tr><td colspan="5" class="activity__empty">No recent activity.</td></tr>';
-    } else {
-        body.innerHTML = rows.map(a => `
-            <tr>
-                <td>${a.date}</td>
-                <td>${a.bookTitle}</td>
-                <td>${a.member}</td>
-                <td>${a.action}</td>
-                <td><span class="pill pill--${a.status.toLowerCase()}">${a.status}</span></td>
-            </tr>
-        `).join('');
-    }
-
-    // --- Quick action handlers ---
-    function saveActivity(entry) {
-        const list = JSON.parse(localStorage.getItem('lv_activity'));
-        list.unshift(entry);
-        localStorage.setItem('lv_activity', JSON.stringify(list));
-    }
-
-    const issueBtn = document.getElementById('issueBtn');
-    if (issueBtn) {
-        issueBtn.addEventListener('click', () => {
-            const available = books.filter(b => b.issuedTo === null);
-            if (available.length === 0) { alert('No books available to issue.'); return; }
-            const title = prompt('Book title to issue:\n\nAvailable:\n' + available.map(b => '- ' + b.title).join('\n'));
-            if (!title) return;
-            const book = books.find(b => b.title.toLowerCase() === title.trim().toLowerCase() && b.issuedTo === null);
-            if (!book) { alert('Book not found or already issued.'); return; }
-            const username = prompt('Member username:');
-            if (!username) return;
-            const member = members.find(m => m.username === username.trim());
-            if (!member) { alert('Member not found.'); return; }
-            book.issuedTo = member.username;
-            localStorage.setItem('lv_books', JSON.stringify(books));
-            saveActivity({
-                date: new Date().toISOString().slice(0, 10),
-                bookTitle: book.title,
-                member: member.username,
-                action: 'Issued',
-                status: 'Active'
-            });
-            alert('Book issued. Refreshing...');
-            location.reload();
-        });
-    }
-
-    const addBookBtn = document.getElementById('addBookBtn');
-    if (addBookBtn) {
-        addBookBtn.addEventListener('click', () => {
-            const title  = prompt('Book title:');
-            if (!title) return;
-            const author = prompt('Author:');
-            if (!author) return;
-            const isbn   = prompt('ISBN (optional):') || '';
-            books.push({
-                id: Date.now(),
-                title: title.trim(),
-                author: author.trim(),
-                isbn: isbn.trim(),
-                issuedTo: null
-            });
-            localStorage.setItem('lv_books', JSON.stringify(books));
-            alert('Book added. Refreshing...');
-            location.reload();
-        });
-    }
-
-    const addMemberBtn = document.getElementById('addMemberBtn');
-    if (addMemberBtn) {
-        addMemberBtn.addEventListener('click', () => {
-            const username = prompt('Username:');
-            if (!username) return;
-            const name     = prompt('Full name:');
-            if (!name) return;
-            if (members.some(m => m.username === username.trim())) {
-                alert('Username already exists.');
-                return;
-            }
-            members.push({
-                id: Date.now(),
-                username: username.trim(),
-                name: name.trim(),
-                joined: new Date().toISOString().slice(0, 10)
-            });
-            localStorage.setItem('lv_members', JSON.stringify(members));
-            alert('Member added. Refreshing...');
-            location.reload();
-        });
-    }
-
-    const clearBtn = document.getElementById('clearBtn');
-    if (clearBtn) {
-        clearBtn.addEventListener('click', () => {
-            if (!confirm('Reset all demo data (books, members, activity)? Your login stays.')) return;
-            localStorage.removeItem('lv_books');
-            localStorage.removeItem('lv_members');
-            localStorage.removeItem('lv_activity');
-            alert('Demo data reset.');
-            location.reload();
-        });
-    }
-
-    const browseBtn = document.getElementById('browseBtn');
-    if (browseBtn) {
-        browseBtn.addEventListener('click', () => {
-            const avail = books.filter(b => b.issuedTo === null);
-            alert('Available books:\n\n' + avail.map(b => '• ' + b.title + ' — ' + b.author).join('\n'));
-        });
-    }
-
-    const historyBtn = document.getElementById('historyBtn');
-    if (historyBtn) {
-        historyBtn.addEventListener('click', () => {
-            const mine = activity.filter(a => a.member === auth.username);
-            if (mine.length === 0) { alert('No history yet.'); return; }
-            alert('Your history:\n\n' + mine.map(a => a.date + ' — ' + a.bookTitle + ' (' + a.action + ')').join('\n'));
-        });
-    }
-
-    // --- Logout ---
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-        localStorage.removeItem('lv_auth');
-        window.location.href = 'login.html';
-    });
-    </script>
+    <script src="js/dashboard.js"></script>
 
 </body>
 </html>
