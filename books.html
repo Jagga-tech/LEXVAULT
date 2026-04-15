@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LexVault — Books</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="js/common.js"></script>
+</head>
+<body class="dash-body">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container navbar__inner">
+            <a href="dashboard.html" class="navbar__logo">
+                <span class="logo-icon">&#128218;</span> LexVault
+            </a>
+            <ul class="navbar__links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="books.html" class="nav-active">Books</a></li>
+                <li><a href="members.html" id="navMembers">Members</a></li>
+                <li><span id="navUser" class="nav-user">—</span></li>
+                <li><button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">&#127769;</button></li>
+                <li><button id="logoutBtn" class="btn btn--primary">Logout</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="dash">
+        <div class="container">
+
+            <header class="dash__header">
+                <h1 class="dash__title">Books</h1>
+                <p class="dash__sub">Browse and manage the library's book collection.</p>
+            </header>
+
+            <div class="page-head">
+                <input type="text" id="searchBox" class="search-box" placeholder="Search by title, author, or ISBN...">
+                <div class="page-head__actions">
+                    <button id="exportBtn" class="btn btn--ghost">&#128229; Export CSV</button>
+                    <button id="addBtn"    class="btn btn--primary" data-role-gate="admin,librarian">&#10133; Add Book</button>
+                </div>
+            </div>
+
+            <div id="countLine" class="dash__sub" style="margin-bottom:10px;"></div>
+
+            <div style="overflow-x:auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>ISBN</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="js/books.js"></script>
+</body>
+</html>
